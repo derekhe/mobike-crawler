@@ -1,0 +1,88 @@
+html, body, #root {
+    height: 100%;
+    width: 100%;
+}
+
+#container {
+    padding: 20px;
+}
+
+.amap-marker-label {
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+}
+
+.map-search {
+    margin: auto;
+    width: 70%;
+    padding: 10px;
+    height: 500px;
+}
+
+.heat-map {
+    margin: auto;
+    width: 70%;
+    height: 500px;
+}
+
+.id-search {
+    margin: auto;
+    width: 70%;
+    padding: 10px;
+    height: 500px;
+}
+
+.page {
+    width: 100%;
+    height: 768px;
+    padding: 10px;
+}
+
+.odd {
+    background: #424242;
+}
+
+.odd-text {
+    color: white;
+    text-align: center;
+}
+
+.even-text {
+    text-align: center;
+}
+
+.title {
+    width: 100%;
+    height: 300px
+}
+
+.toggle {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    max-width: 80px;
+}
+
+.slider {
+    display: inline-block;
+    height: 20px;
+    width: 100%;
+}
+
+.heat-map-head {
+    margin: auto;
+    width: 50%;
+    text-align: center;
+}
+
+.footer {
+    padding: 10px;
+    color: white;
+    background: #424242;
+    text-align: center;
+}
+
+.one-line {
+    display:inline-flex;
+}
