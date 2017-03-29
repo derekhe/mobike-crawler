@@ -19,7 +19,7 @@ class ProxyProvider:
 
     def get_list(self):
         logger.debug("Getting proxy list")
-        r = requests.get("https://jsonblob.com/31bf2dc8-00e6-11e7-a0ba-e39b7fdbe78b", timeout=10)
+        r = requests.get("https://jsonblob.com/api/jsonBlob/31bf2dc8-00e6-11e7-a0ba-e39b7fdbe78b", timeout=10)
         proxies = ujson.decode(r.text)
         logger.debug("Got %s proxies", len(proxies))
         self._proxies = list(map(lambda p: Proxy(p), proxies))
