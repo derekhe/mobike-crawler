@@ -10,7 +10,7 @@
 
 如果你喜欢我的文章，请赏一杯咖啡或者Star，谢谢：）
 
-<img src="https://s21.postimg.org/58f67s3dz/Wechat_IMG20.jpg" width="100">
+<img src="https://s21.postimg.org/58f67s3dz/Wechat_IMG20.jpg" width="350">
 
 
 目录结构：
