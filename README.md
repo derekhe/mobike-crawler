@@ -10,6 +10,8 @@
 
 如果你喜欢我的文章，请赏一杯咖啡或者Star，谢谢：）
 
+[![WechatIMG20.jpg](https://s14.postimg.org/nlfodrj0x/Wechat_IMG20.jpg)](https://postimg.org/image/55v7gd4wd/)
+
 目录结构：
 
 * \analysis - jupyter做数据分析
