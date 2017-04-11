@@ -23,3 +23,8 @@
 * importToDb.py - 导入到postgres数据库中进行分析
 * sql.sql - 创建表的sql
 * start.sh -　持续运行的脚本
+
+使用前请更新代理池，我这里仅仅提供的是一个样例，里面的代理很有可能已经失效：
+```
+r = requests.get("https://jsonblob.com/api/jsonBlob/31bf2dc8-00e6-11e7-a0ba-e39b7fdbe78b", timeout=10)
+```
