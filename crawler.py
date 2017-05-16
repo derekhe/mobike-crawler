@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 import os
 import os.path
 import random
@@ -10,6 +11,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
 import requests
+requests.packages.urllib3.disable_warnings()
 from retrying import retry
 
 from modules.ProxyProvider import ProxyProvider
@@ -26,28 +28,39 @@ class Crawler:
         self.proxyProvider = ProxyProvider()
         self.total = 0
         self.done = 0
+        self.mobileNo = '填入你的手机号码'
+        self.accesstoken = '填入Accesstoken，可以抓包看到'
 
     def get_nearby_bikes(self, args):
         try:
-            url = "https://mwx.mobike.com/mobike-api/rent/nearbyBikesInfo.do"
+            url = "https://api.mobike.com/mobike-api/rent/nearbyBikesInfo.do"
 
-            payload = "latitude=%s&longitude=%s&errMsg=getMapCenterLocation" % (args[0], args[1])
+            t = int(time.time() * 1000)
 
+            eption = hashlib.md5((self.mobileNo + "#" + str(t)).encode("utf-8")).hexdigest()[2:7]
+
+            payload = "cityCode=028&biketype=0&scope=500&latitude=%s&longitude=%s" % (args[0], args[1])
             headers = {
-                'charset': "utf-8",
-                'platform': "4",
-                "referer":"https://servicewechat.com/wx40f112341ae33edb/1/",
-                'content-type': "application/x-www-form-urlencoded",
-                'user-agent': "MicroMessenger/6.5.4.1000 NetType/WIFI Language/zh_CN",
-                'host': "mwx.mobike.com",
-                'connection': "Keep-Alive",
-                'accept-encoding': "gzip",
-                'cache-control': "no-cache"
+                "User-Agent": "",
+                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                "Connection": "Keep-Alive",
+                "Accept-Encoding": "gzip",
+                "platform": "1",
+                "mobileNo": self.mobileNo,
+                "eption": eption,
+                "time": str(t),
+                "lang": "zh",
+                "uuid": "e2dc2371e8c85e046039e90945c84943",
+                "version": "4.3.0",
+                "citycode": "028",
+                "accesstoken": self.accesstoken,
+                "os": "24",
             }
 
             self.request(headers, payload, args, url)
         except Exception as ex:
             print(ex)
+            pass
 
     def request(self, headers, payload, args, url):
         while True:
@@ -56,13 +69,12 @@ class Crawler:
                 response = requests.request(
                     "POST", url, data=payload, headers=headers,
                     proxies={"https": proxy.url},
-                    timeout=5,verify=False
+                    timeout=1,verify=False
                 )
 
                 with self.lock:
                     with sqlite3.connect(self.db_name) as c:
                         try:
-                            print(response.text)
                             decoded = ujson.decode(response.text)['object']
                             self.done += 1
                             for x in decoded:
@@ -77,41 +89,44 @@ class Crawler:
                             print(args, self.done, percent * 100, self.done / timespend.total_seconds() * 60, total,
                                   total - timespend)
                         except Exception as ex:
-                            print(ex)
+                            pass
                     break
             except Exception as ex:
                 proxy.fatal_error()
 
     def start(self):
-        left = 30.7828453209
-        top = 103.9213455517
-        right = 30.4781772402
-        bottom = 104.2178123382
+        while True:
+            self.proxyProvider.get_list()
 
-        offset = 0.002
+            left = 30.7828453209
+            top = 103.9213455517
+            right = 30.4781772402
+            bottom = 104.2178123382
 
-        if os.path.isfile(self.db_name):
-            os.remove(self.db_name)
+            offset = 0.002
 
-        try:
-            with sqlite3.connect(self.db_name) as c:
-                c.execute('''CREATE TABLE mobike
-                    (Time DATETIME, bikeIds VARCHAR(12), bikeType TINYINT,distId INTEGER,distNum TINYINT, type TINYINT, x DOUBLE, y DOUBLE)''')
-        except Exception as ex:
-            pass
+            if os.path.isfile(self.db_name):
+                os.remove(self.db_name)
 
-        executor = ThreadPoolExecutor(max_workers=250)
-        print("Start")
-        self.total = 0
-        lat_range = np.arange(left, right, -offset)
-        for lat in lat_range:
-            lon_range = np.arange(top, bottom, offset)
-            for lon in lon_range:
-                self.total += 1
-                executor.submit(self.get_nearby_bikes, (lat, lon))
+            try:
+                with sqlite3.connect(self.db_name) as c:
+                    c.execute('''CREATE TABLE mobike
+                        (Time DATETIME, bikeIds VARCHAR(12), bikeType TINYINT,distId INTEGER,distNum TINYINT, type TINYINT, x DOUBLE, y DOUBLE)''')
+            except Exception as ex:
+                pass
 
-        executor.shutdown()
-        self.group_data()
+            executor = ThreadPoolExecutor(max_workers=300)
+            print("Start")
+            self.total = 0
+            lat_range = np.arange(left, right, -offset)
+            for lat in lat_range:
+                lon_range = np.arange(top, bottom, offset)
+                for lon in lon_range:
+                    self.total += 1
+                    executor.submit(self.get_nearby_bikes, (lat, lon))
+
+            executor.shutdown()
+            self.group_data()
 
     def group_data(self):
         print("Creating group data")
