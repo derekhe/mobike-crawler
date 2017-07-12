@@ -32,14 +32,9 @@
 r = requests.get("https://jsonblob.com/api/jsonBlob/31bf2dc8-00e6-11e7-a0ba-e39b7fdbe78b", timeout=10)
 ```
 
+运行需求
+```
+python3 + numpy 组件
+```
 
-````
-requires:
-python3 
-
-pip requires:
-
-numpy
-ujson   (which is never used)
-````
-* `ujson` is removed by [@zxj5470](https://github.com/zxj5470) and he changed it into stdlib `json`,and update the `ujson.decode` by `json.loads`
+* `ujson` 被移除，改用了 python自带的 `json` 以及将`ujson.decode`换成了`json.loads`(有些人的电脑是装不上ujson的……)
