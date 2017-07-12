@@ -5,7 +5,7 @@ import random
 import sqlite3
 import threading
 import time
-import ujson
+import json
 from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
@@ -63,7 +63,7 @@ class Crawler:
                     with sqlite3.connect(self.db_name) as c:
                         try:
                             print(response.text)
-                            decoded = ujson.decode(response.text)['object']
+                            decoded = json.loads(response.text)['object']
                             self.done += 1
                             for x in decoded:
                                 c.execute("INSERT INTO mobike VALUES (%d,'%s',%d,%d,%s,%s,%f,%f)" % (

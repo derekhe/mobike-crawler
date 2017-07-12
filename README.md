@@ -31,3 +31,10 @@
 ```
 r = requests.get("https://jsonblob.com/api/jsonBlob/31bf2dc8-00e6-11e7-a0ba-e39b7fdbe78b", timeout=10)
 ```
+
+````
+requires:
+numpy
+ujson
+ 
+````
