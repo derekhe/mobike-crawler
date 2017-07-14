@@ -83,10 +83,11 @@ class Crawler:
                 proxy.fatal_error()
 
     def start(self):
-        left = 103.9213455517
-        top = 30.7828453209
-        right = 104.2178123382
-        bottom = 30.4781772402
+
+        left_lng = 103.9213455517
+        top_lat = 30.7828453209
+        right_lng = 104.2178123382
+        bottom_lat = 30.4781772402
 
         offset = 0.002
 
@@ -103,10 +104,10 @@ class Crawler:
         executor = ThreadPoolExecutor(max_workers=250)
         print("Start")
         self.total = 0
-        lat_range = np.arange(top, bottom, -offset)
+        lat_range = np.arange(top_lat, bottom_lat, -offset)
         for lat in lat_range:
-            lon_range = np.arange(left, right, offset)
-            for lon in lon_range:
+            lng_range = np.arange(left_lng, right_lng, offset)
+            for lon in lng_range:
                 self.total += 1
                 executor.submit(self.get_nearby_bikes, (lat, lon))
 
