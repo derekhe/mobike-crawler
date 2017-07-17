@@ -5,7 +5,7 @@ import random
 import sqlite3
 import threading
 import time
-import ujson
+import json
 from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
@@ -63,7 +63,7 @@ class Crawler:
                     with sqlite3.connect(self.db_name) as c:
                         try:
                             print(response.text)
-                            decoded = ujson.decode(response.text)['object']
+                            decoded = json.loads(response.text)['object']
                             self.done += 1
                             for x in decoded:
                                 c.execute("INSERT INTO mobike VALUES (%d,'%s',%d,%d,%s,%s,%f,%f)" % (
@@ -83,10 +83,11 @@ class Crawler:
                 proxy.fatal_error()
 
     def start(self):
-        left = 30.7828453209
-        top = 103.9213455517
-        right = 30.4781772402
-        bottom = 104.2178123382
+
+        left_lng = 103.9213455517
+        top_lat = 30.7828453209
+        right_lng = 104.2178123382
+        bottom_lat = 30.4781772402
 
         offset = 0.002
 
@@ -103,10 +104,10 @@ class Crawler:
         executor = ThreadPoolExecutor(max_workers=250)
         print("Start")
         self.total = 0
-        lat_range = np.arange(left, right, -offset)
+        lat_range = np.arange(top_lat, bottom_lat, -offset)
         for lat in lat_range:
-            lon_range = np.arange(top, bottom, offset)
-            for lon in lon_range:
+            lng_range = np.arange(left_lng, right_lng, offset)
+            for lon in lng_range:
                 self.total += 1
                 executor.submit(self.get_nearby_bikes, (lat, lon))
 

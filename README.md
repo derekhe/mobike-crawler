@@ -31,3 +31,33 @@
 ```
 r = requests.get("https://jsonblob.com/api/jsonBlob/31bf2dc8-00e6-11e7-a0ba-e39b7fdbe78b", timeout=10)
 ```
+
+运行需求
+```
+python3 + numpy 组件
+```
+
+* `ujson` 被移除，改用了 python自带的 `json` 以及将`ujson.decode`换成了`json.loads`(有些人的电脑是装不上ujson的……)
+使用：
+代码中的参数经过了[@zxj5470](https://github.com/zxj5470)的修改……
+原始数据意思左上右下表示理解不能……坐标数值上（纬度上）left比rifht大，（经度）top比bottom数值小。
+这样的设定有点反人类啊。
+* 有强迫症的我给改了。下面对于的np.arange也进行了修改并经过测试。
+
+```
+# 作者版本原始数据格式：
+    left = 30.7828453209    #左上角点的纬度
+    top = 103.9213455517    #左上角点的经度
+    
+    right = 30.4781772402    #右下角点的纬度
+    bottom = 104.2178123382    #右下角点的纬度
+
+    
+# 经过zxj5470修改后的：
+    left_lng = 103.9213455517    #左上角点的经度
+    top_lat = 30.7828453209    #左上角点的纬度
+    
+    right_lng = 104.2178123382    #右下角点的经度
+    bottom_lat =  30.4781772402   #右下角点的纬度
+   
+```
